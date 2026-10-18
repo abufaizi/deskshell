@@ -16,6 +16,14 @@ npm run typecheck
 npm test
 ```
 
+On Linux CI/headless hosts, dev smoke:
+
+```bash
+xvfb-run -a --server-args="-screen 0 1280x720x24" npm run dev
+```
+
+User-facing setup (Windows portable MVP + dev): see Project Context **`docs/getting-started.md`**.
+
 ## Windows build (Linux host)
 
 Install Wine (including `wine32:i386`), then:
