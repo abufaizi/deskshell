@@ -7,9 +7,12 @@ import {
   nativeTheme,
   type OpenDialogOptions
 } from 'electron'
+import { readFileSync } from 'fs'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import iconPng from '../../resources/icon.png?asset'
+import iconIco from '../../resources/icon.ico?asset'
+import splashIconPath from '../../resources/icon.png?asset'
 import { buildSplashHtml } from './splash-html'
 import { loadSettings, saveSettings } from './settings-store'
 import type { AppSettings, ThemePreference } from '@shared/settings'
@@ -18,6 +21,15 @@ import { themeBackgroundColor } from '@shared/settings'
 let mainWindow: BrowserWindow | null = null
 let splashWindow: BrowserWindow | null = null
 let splashShownAt = 0
+
+function appWindowIcon(): string {
+  return process.platform === 'win32' ? iconIco : iconPng
+}
+
+function splashIconDataUri(): string {
+  const b64 = readFileSync(splashIconPath).toString('base64')
+  return `data:image/png;base64,${b64}`
+}
 
 function resolveEffectiveTheme(theme: ThemePreference): 'light' | 'dark' {
   if (theme === 'light' || theme === 'dark') return theme
@@ -36,13 +48,14 @@ function createSplashWindow(): void {
     skipTaskbar: true,
     alwaysOnTop: true,
     backgroundColor: '#0a0a0a',
+    icon: appWindowIcon(),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true
     }
   })
-  const html = buildSplashHtml()
+  const html = buildSplashHtml(splashIconDataUri())
   void splashWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`)
   splashWindow.on('ready-to-show', () => {
     splashWindow?.show()
@@ -111,7 +124,7 @@ async function createMainWindow(initialSettings: AppSettings): Promise<void> {
     show: false,
     autoHideMenuBar: true,
     backgroundColor,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    icon: appWindowIcon(),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
