@@ -4,7 +4,7 @@
   "description": "Desk Shell — Phase 1 Electron desktop shell",
   "main": "./out/main/index.js",
   "author": "com.abufaizi.deskshell",
-  "homepage": "https://github.com/abufaizi/desk-shell",
+  "homepage": "https://github.com/abufaizi/deskshell",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache .",
