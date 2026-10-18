@@ -1,5 +1,7 @@
 appId: com.abufaizi.deskshell
 productName: Desk Shell
+electronLanguages:
+  - en-US
 directories:
   buildResources: build
 files:
